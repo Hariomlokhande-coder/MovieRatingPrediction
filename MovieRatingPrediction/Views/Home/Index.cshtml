@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Movie Predictor Pro";
+}
+
+<div class="main-container">
+    <div class="row justify-content-center mt-5 mb-5">
+        <div class="col-md-6 col-lg-5">
+            <div class="text-center mb-5">
+                <h1 class="brand-text mb-2">Movie<span class="highlight">Mind</span></h1>
+                <p class="text-muted lead px-4">Experience the future of film success prediction using advanced Neural Regression.</p>
+            </div>
+
+            <div class="card">
+                <form asp-action="Predict" method="post">
+                    <div class="mb-4">
+                        <label for="genre" class="form-label">GENRE</label>
+                        <select name="genre" class="form-control" id="genre" required>
+                            <option value="">Select Genre</option>
+                            <option value="Action" selected="@(ViewBag.Genre == "Action")">Action</option>
+                            <option value="Drama" selected="@(ViewBag.Genre == "Drama")">Drama</option>
+                            <option value="Comedy" selected="@(ViewBag.Genre == "Comedy")">Comedy</option>
+                            <option value="Sci-Fi" selected="@(ViewBag.Genre == "Sci-Fi")">Sci-Fi</option>
+                            <option value="Horror" selected="@(ViewBag.Genre == "Horror")">Horror</option>
+                            <option value="Adventure" selected="@(ViewBag.Genre == "Adventure")">Adventure</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="duration" class="form-label">DURATION (MINUTES)</label>
+                        <input type="number" step="1" name="duration" class="form-control" id="duration" placeholder="e.g. 120" value="@ViewBag.Duration" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="budget" class="form-label">BUDGET (Rs)</label>
+                        <input type="number" step="1000" name="budget" class="form-control" id="budget" placeholder="e.g. 500000" value="@ViewBag.Budget" required>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="popularity" class="form-label">POPULARITY SCORE (1-10)</label>
+                        <input type="number" step="0.1" name="popularity" class="form-control" id="popularity" placeholder="e.g. 8.5" value="@ViewBag.Popularity" required min="1" max="10">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 shadow-lg">PREDICT RATING</button>
+                </form>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger mt-4 border-0 rounded-4 py-3" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+                    </div>
+                }
+
+                @if (ViewBag.Result != null)
+                {
+                    <div class="prediction-result">
+                        <p class="result-label">Predicted IMDb Rating</p>
+                        <h2 class="result-value">@ViewBag.Result</h2>
+                        <div class="stars">
+                            @for (int i = 1; i <= 10; i++)
+                            {
+                                <span style="color: @(i <= ViewBag.Result ? "var(--primary)" : "#ddd")">★</span>
+                            }
+                        </div>
+                        <p class="text-muted mt-3 small">Based on latest market trends and historical performance.</p>
+                    </div>
+                }
+            </div>
+
+            <!-- Model Metrics Section -->
+            <div class="card mt-4 p-4 text-center" style="background: #fbfbfb; border: 1px dashed #ddd;">
+                <h5 class="text-muted mb-3" style="font-size: 0.9rem; letter-spacing: 1px; font-weight: 700;">MODEL EVALUATION METRICS (LOSS)</h5>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="small text-muted">RMSE</div>
+                        <div class="fw-bold text-primary">@ViewBag.RMSE</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="small text-muted">MAE</div>
+                        <div class="fw-bold text-primary">@ViewBag.MAE</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="small text-muted">R² Score</div>
+                        <div class="fw-bold text-primary">@ViewBag.R2</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+}
